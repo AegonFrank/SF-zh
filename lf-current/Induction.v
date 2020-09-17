@@ -171,22 +171,54 @@ Proof.
 Theorem mult_0_r : forall n:nat,
   n * 0 = 0.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction n.
+  - reflexivity.
+  - simpl.
+    rewrite -> IHn.
+    reflexivity.
+Qed.
+
 
 Theorem plus_n_Sm : forall n m : nat,
   S (n + m) = n + (S m).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction n.
+  - intro m.
+    reflexivity.
+  - intro m.
+    simpl.
+    rewrite <- IHn.
+    reflexivity.
+Qed.
+
 
 Theorem plus_comm : forall n m : nat,
   n + m = m + n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction n.
+  - intro m.
+    rewrite <- plus_n_O.
+    reflexivity.
+  - intro m.
+    simpl.
+    rewrite <- plus_n_Sm.
+    rewrite <- IHn.
+    reflexivity.
+Qed.
+
 
 Theorem plus_assoc : forall n m p : nat,
   n + (m + p) = (n + m) + p.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction n.
+  - intros m p.
+    reflexivity.
+  - intros m p.
+    simpl.
+    rewrite -> IHn.
+    reflexivity.
+Qed.
+
 (** [] *)
 
 (** **** 练习：2 星, standard (double_plus) 
@@ -203,7 +235,14 @@ Fixpoint double (n:nat) :=
 
 Lemma double_plus : forall n, double n = n + n .
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction n.
+  - reflexivity.
+  - simpl.
+    rewrite -> plus_comm.
+    rewrite -> IHn.
+    reflexivity.
+Qed.
+
 (** [] *)
 
 (** **** 练习：2 星, standard, optional (evenb_S) 
@@ -215,7 +254,14 @@ Proof.
 Theorem evenb_S : forall n : nat,
   evenb (S n) = negb (evenb n).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction n.
+  - reflexivity.
+  - rewrite -> IHn.
+    simpl.
+    rewrite -> negb_involutive.
+    reflexivity.
+Qed.
+
 (** [] *)
 
 (** **** 练习：1 星, standard, optional (destruct_induction) 
@@ -409,7 +455,17 @@ Definition manual_grade_for_plus_comm_informal : option (nat*string) := None.
 Theorem plus_swap : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros n m p.
+  rewrite -> plus_assoc.
+  rewrite -> plus_assoc.
+  assert (n + m = m + n) as H. {
+    rewrite -> plus_comm.
+    reflexivity.
+  }
+  rewrite -> H.
+  reflexivity.
+Qed.
+
 
 (** 现在证明乘法交换律。（你在证明过程中可能想要定义并证明一个辅助定理。
     提示：[n * (1 + k)] 是什么？） *)
@@ -417,7 +473,25 @@ Proof.
 Theorem mult_comm : forall m n : nat,
   m * n = n * m.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction m.
+  - induction n.
+    * reflexivity.
+    * simpl.
+      rewrite <- IHn.
+      reflexivity.
+  - induction n.
+    * simpl.
+      rewrite -> IHm.
+      reflexivity.
+    * simpl.
+      rewrite <- IHn.
+      rewrite -> (IHm (S n)).
+      simpl.
+      rewrite -> IHm.
+      rewrite -> plus_swap.
+      reflexivity.
+Qed.
+
 (** [] *)
 
 (** **** 练习：3 星, standard, optional (more_exercises) 
@@ -431,31 +505,60 @@ Check leb.
 Theorem leb_refl : forall n:nat,
   true = (n <=? n).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction n.
+  - reflexivity.
+  - simpl.
+    rewrite <- IHn.
+    reflexivity.
+Qed.
+
 
 Theorem zero_nbeq_S : forall n:nat,
   0 =? (S n) = false.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  reflexivity.
+Qed.
+
 
 Theorem andb_false_r : forall b : bool,
   andb b false = false.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  destruct b.
+  - reflexivity.
+  - reflexivity.
+Qed.
+
 
 Theorem plus_ble_compat_l : forall n m p : nat,
   n <=? m = true -> (p + n) <=? (p + m) = true.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros n m p H.
+  induction p.
+  - simpl.
+    rewrite -> H.
+    reflexivity.
+  - simpl.
+    rewrite -> IHp.
+    reflexivity.
+Qed.
+
 
 Theorem S_nbeq_0 : forall n:nat,
   (S n) =? 0 = false.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intro n.
+  reflexivity.
+Qed.
+
 
 Theorem mult_1_l : forall n:nat, 1 * n = n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intro n.
+  simpl.
+  rewrite -> plus_comm.
+  reflexivity.
+Qed.
+
 
 Theorem all3_spec : forall b c : bool,
     orb
@@ -464,7 +567,13 @@ Theorem all3_spec : forall b c : bool,
                (negb c))
   = true.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  destruct b, c.
+  - reflexivity.
+  - reflexivity.
+  - reflexivity.
+  - reflexivity.
+Qed.
+
 
 Theorem mult_plus_distr_r : forall n m p : nat,
   (n + m) * p = (n * p) + (m * p).
