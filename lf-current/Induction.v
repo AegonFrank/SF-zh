@@ -636,7 +636,14 @@ Qed.
 Theorem plus_swap' : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros n m p.
+  rewrite -> plus_assoc.
+  rewrite -> plus_assoc.
+  replace (n + m) with (m + n).
+  reflexivity.
+  rewrite -> plus_comm.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 练习：3 星, standard, recommended (binary_commute) 
@@ -662,7 +669,24 @@ Proof.
     请自便！ *)
 
 (* 请在此处解答 *)
-
+Theorem bin_to_nat_pres_incr : forall b : bin,
+    bin_to_nat (incr b) = S (bin_to_nat b).
+Proof.
+  induction b.
+  - reflexivity.
+  - simpl.
+    rewrite -> plus_assoc.
+    rewrite -> plus_comm.
+    reflexivity.
+  - simpl.
+    rewrite -> IHb.
+    simpl.
+    replace (S (bin_to_nat b + 0)) with (bin_to_nat b + 0 + 1).
+    rewrite -> plus_assoc.
+    reflexivity.
+    rewrite -> plus_comm.
+    reflexivity.
+Qed.
 (* 请勿修改下面这一行： *)
 Definition manual_grade_for_binary_commute : option (nat*string) := None.
 (** [] *)
