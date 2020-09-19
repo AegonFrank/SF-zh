@@ -578,7 +578,20 @@ Qed.
 Theorem mult_plus_distr_r : forall n m p : nat,
   (n + m) * p = (n * p) + (m * p).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros n m p.
+  rewrite -> (mult_comm (n + m) p).
+  rewrite -> (mult_comm n p).
+  rewrite -> (mult_comm m p).
+  induction p.
+  - reflexivity.
+  - simpl.
+    rewrite -> IHp.
+    rewrite <- plus_assoc.
+    rewrite -> (plus_swap m (p * n) (p * m)).
+    rewrite -> plus_assoc.
+    reflexivity.
+Qed.
+
 
 Theorem mult_assoc : forall n m p : nat,
   n * (m * p) = (n * m) * p.
