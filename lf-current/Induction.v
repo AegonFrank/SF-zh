@@ -596,7 +596,14 @@ Qed.
 Theorem mult_assoc : forall n m p : nat,
   n * (m * p) = (n * m) * p.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros n m p.
+  induction n.
+  - reflexivity.
+  - simpl.
+    rewrite -> IHn.
+    rewrite -> mult_plus_distr_r.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** **** 练习：2 星, standard, optional (eqb_refl) 
@@ -608,7 +615,12 @@ Proof.
 Theorem eqb_refl : forall n : nat,
   true = (n =? n).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  induction n.
+  - reflexivity.
+  - simpl.
+    rewrite <- IHn.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** **** 练习：2 星, standard, optional (plus_swap') 
