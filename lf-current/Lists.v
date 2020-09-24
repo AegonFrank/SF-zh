@@ -126,14 +126,20 @@ Proof.
 Theorem snd_fst_is_swap : forall (p : natprod),
   (snd p, fst p) = swap_pair p.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intro p.
+  destruct p as [n m].
+  simpl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 练习：1 星, standard, optional (fst_swap_is_snd)  *)
 Theorem fst_swap_is_snd : forall (p : natprod),
   fst (swap_pair p) = snd p.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  destruct p as [n m].
+  reflexivity.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
