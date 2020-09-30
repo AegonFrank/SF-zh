@@ -940,7 +940,12 @@ Qed.
 Theorem rev_injective: forall (l1 l2 : natlist),
     rev l1 = rev l2 -> l1 = l2.
 Proof.
-Abort.
+  intros l1 l2 H.
+  rewrite <- rev_involutive.
+  rewrite <- H.
+  rewrite -> rev_involutive.
+  reflexivity.
+Qed.
 (* 请勿修改下面这一行： *)
 Definition manual_grade_for_rev_injective : option (nat*string) := None.
 (** [] *)
@@ -1019,16 +1024,19 @@ Definition option_elim (d : nat) (o : natoption) : nat :=
  (** 用同样的思路修正之前的 [hd] 函数，使我们无需为 [nil] 的情况提供默认元素。  *)
 
 Definition hd_error (l : natlist) : natoption
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+  := match l with
+     | nil => None
+     | h::t => Some h
+     end.
 
 Example test_hd_error1 : hd_error [] = None.
- (* 请在此处解答 *) Admitted.
+Proof. reflexivity. Qed.
 
 Example test_hd_error2 : hd_error [1] = Some 1.
- (* 请在此处解答 *) Admitted.
+Proof. reflexivity. Qed.
 
 Example test_hd_error3 : hd_error [5;6] = Some 5.
- (* 请在此处解答 *) Admitted.
+Proof. reflexivity. Qed.
 (** [] *)
 
 (** **** 练习：1 星, standard, optional (option_elim_hd)  *)
@@ -1037,7 +1045,11 @@ Example test_hd_error3 : hd_error [5;6] = Some 5.
 Theorem option_elim_hd : forall (l:natlist) (default:nat),
   hd default l = option_elim default (hd_error l).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros l d.
+  induction l.
+  - reflexivity.
+  - reflexivity.
+Qed.
 (** [] *)
 
 End NatList.
@@ -1066,7 +1078,11 @@ Definition eqb_id (x1 x2 : id) :=
 (** **** 练习：1 星, standard (eqb_id_refl)  *)
 Theorem eqb_id_refl : forall x, true = eqb_id x x.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  destruct x.
+  simpl.
+  rewrite <- eqb_refl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** 现在我们定义偏映射的类型： *)
@@ -1107,7 +1123,11 @@ Theorem update_eq :
   forall (d : partial_map) (x : id) (v: nat),
     find x (update d x v) = Some v.
 Proof.
- (* 请在此处解答 *) Admitted.
+  intros d x v.
+  simpl.
+  rewrite <- eqb_id_refl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 练习：1 星, standard (update_neq)  *)
@@ -1115,7 +1135,11 @@ Theorem update_neq :
   forall (d : partial_map) (x y : id) (o: nat),
     eqb_id x y = false -> find x (update d y o) = find x d.
 Proof.
- (* 请在此处解答 *) Admitted.
+  intros d x y o H.
+  simpl.
+  rewrite -> H.
+  reflexivity.
+Qed.
 (** [] *)
 End PartialMap.
 
