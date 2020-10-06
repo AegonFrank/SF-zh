@@ -339,17 +339,35 @@ Definition list123''' := [1; 2; 3].
 Theorem app_nil_r : forall (X:Type), forall l:list X,
   l ++ [] = l.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros X.
+  induction l.
+  - reflexivity.
+  - simpl.
+    rewrite -> IHl.
+    reflexivity.
+Qed.
 
 Theorem app_assoc : forall A (l m n:list A),
   l ++ m ++ n = (l ++ m) ++ n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros A l m n.
+  induction l.
+  - reflexivity.
+  - simpl.
+    rewrite -> IHl.
+    reflexivity.
+Qed.
 
 Lemma app_length : forall (X:Type) (l1 l2 : list X),
   length (l1 ++ l2) = length l1 + length l2.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros X l1 l2.
+  induction l1.
+  - reflexivity.
+  - simpl.
+    rewrite -> IHl1.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** **** 练习：2 星, standard, optional (more_poly_exercises) 
@@ -359,12 +377,28 @@ Proof.
 Theorem rev_app_distr: forall X (l1 l2 : list X),
   rev (l1 ++ l2) = rev l2 ++ rev l1.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros X l1 l2.
+  induction l1.
+  - simpl.
+    rewrite -> app_nil_r.
+    reflexivity.
+  - simpl.
+    rewrite -> IHl1.
+    rewrite -> app_assoc.
+    reflexivity.
+Qed.
 
 Theorem rev_involutive : forall X : Type, forall l : list X,
   rev (rev l) = l.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intro X.
+  induction l.
+  - reflexivity.
+  - simpl.
+    rewrite -> rev_app_distr.
+    rewrite -> IHl.
+    reflexivity.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -440,12 +474,16 @@ Fixpoint combine {X Y : Type} (lx : list X) (ly : list Y)
 
 Fixpoint split {X Y : Type} (l : list (X*Y))
                : (list X) * (list Y)
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+  := match l with
+     | [] => ([], [])
+     | (x, y)::t => (x::fst (split t), y::snd (split t))
+     end.
 
 Example test_split:
   split [(1,false);(2,false)] = ([1;2],[false;false]).
 Proof.
-(* 请在此处解答 *) Admitted.
+  reflexivity.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
