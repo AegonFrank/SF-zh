@@ -64,7 +64,10 @@ Theorem silly_ex :
      evenb 4 = true ->
      oddb 3 = true.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros H I.
+  apply H.
+  apply I.
+Qed.
 (** [] *)
 
 (** 要使用 [apply] 策略，被应用的事实（的结论）必须精确地匹配证明目标：
@@ -92,7 +95,17 @@ Theorem rev_exercise1 : forall (l l' : list nat),
      l = rev l' ->
      l' = rev l.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros l l' H.
+  rewrite <- (rev_involutive _ l').
+  assert (I: forall (l1 l2: list nat), l1 = l2 -> rev l1 = rev l2). {
+    intros l1 l2 H'.
+    rewrite -> H'.
+    reflexivity.
+  }
+  apply I.
+  symmetry.
+  apply H.
+Qed.
 (** [] *)
 
 (** **** 练习：1 星, standard, optional (apply_rewrite) 
@@ -154,7 +167,11 @@ Example trans_eq_exercise : forall (n m o p : nat),
      (n + p) = m ->
      (n + p) = (minustwo o).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  intros n m o p H1 H2.
+  apply trans_eq with (n := n + p) (m := m).
+  apply H2.
+  apply H1.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
